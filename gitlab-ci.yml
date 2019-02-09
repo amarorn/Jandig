@@ -1,0 +1,26 @@
+stages:
+  - publish
+  - deploy
+
+publish docker:
+  image : docker
+  stage: publish
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
+  script:
+    - cd etc/scripts/ && sh build-base.sh publish
+    - docker build . -f docker/Dockerfile.deploy -t pablodiegoss/arte:django
+    - docker push pablodiegoss/arte:django
+  tags:
+    - docker
+
+deploy:
+  stage: deploy
+  before_script:
+    - apt-get update -y && apt-get install sshpass -y
+  script:
+    - ./digitaloceanssh.sh $DIGITAL_OCEAN_PASSWORD $DIGITAL_OCEAN_IP
+  only:
+    - master
