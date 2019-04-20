@@ -16,7 +16,7 @@ if READ_DOT_ENV_FILE:
     # OS environment variables take precedence over variables from .env
     env.read_env(str(ROOT_DIR.path('.env')))
 
-DEBUG = env.bool('DJANGO_DEBUG', False)
+DEBUG = env.bool('DJANGO_DEBUG', True)
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
-    'pwa'
+    'pwa',
 ]
 
 MIDDLEWARE = [
@@ -48,7 +48,7 @@ MIDDLEWARE = [
 ]
 
 ## Let whitenoise serve static files  -- DON'T USE IN PRODUCTION --
-if env.bool('DEV_STATIC'):
+if env.bool('DEV_STATIC', False):
     MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     print('\n ------- SERVING STATIC FILES USING WHITENOISE! -------\n')
@@ -82,7 +82,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
-if env.bool('DEV_DB'):
+if env.bool('DEV_DB', True):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -103,6 +103,8 @@ else:
     # STARTS SERVICES THAT DJANGO DEPENDS E.G. postgres
     start_services()
 
+
+AUTH_USER_MODEL = 'pwa.User'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -144,3 +146,6 @@ STATIC_ROOT = os.path.join(COLLECT_DIR, 'collect')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'pwa', 'static')
 ]
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'pwa', 'media')
+MEDIA_URL = '/media/'
