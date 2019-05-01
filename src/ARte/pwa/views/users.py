@@ -54,7 +54,7 @@ def create_exhibition(request):
         except IntegrityError:
             form.add_error('name', 'This exhibition name already exists')
         else:
-            return redirect(f'{exhibition.author.username}/{exhibition.name}/')
+            return redirect(f'{request.user.username}/{exhibition.name}/')
     else:
         form = ExhibitionForm()
         return render(request, 'pwa/create-exhibition.jinja2', {'form': form})

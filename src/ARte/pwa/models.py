@@ -16,6 +16,10 @@ class User(AbstractUser):
 
     objects = UserManager()
 
+    @property
+    def username(self):
+        self.email.replace('@', '_')
+
 # class Profile(models.Model):
 #     """
 #     User profile.

@@ -14,5 +14,4 @@ urlpatterns = [
     path('accounts/signup', signup, name='signup'),
 
     path('create-exhibition', create_exhibition, name='create-exhibition'),
-
 ]
